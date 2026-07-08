@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XD Remote</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,Arial,sans-serif;
+}
+
+body{
+    background:#111827;
+    color:white;
+    display:flex;
+    justify-content:center;
+    padding:40px;
+}
+
+.container{
+    width:1100px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:34px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:350px 1fr;
+    gap:20px;
+}
+
+.card{
+    background:#1f2937;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.card h2{
+    margin-bottom:15px;
+    color:#60a5fa;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+button{
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    transition:.2s;
+    font-size:15px;
+}
+
+button:hover{
+    background:#3b82f6;
+    transform:translateY(-2px);
+}
+
+button.red{
+    background:#dc2626;
+}
+
+button.red:hover{
+    background:#ef4444;
+}
+
+input{
+    width:100%;
+    margin:8px 0 15px;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#374151;
+    color:white;
+    outline:none;
+}
+
+details{
+    margin-top:15px;
+}
+
+summary{
+    cursor:pointer;
+    padding:12px;
+    background:#374151;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.stream{
+    background:black;
+    border-radius:15px;
+    overflow:hidden;
+    height:700px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.stream img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+.status{
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    background:#0f172a;
+    color:#4ade80;
+}
+
+.switch{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:12px 0;
+}
+
+.switch input{
+    width:auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🖥️ XD Remote</h1>
+
+<div class="grid">
+
+<div>
+
+<div class="card">
+
+<h2>Steuerung</h2>
+
+<div class="buttons">
+
+<button onclick="sendR2('click')">Click</button>
+<button onclick="sendR2('enter')">Enter</button>
+
+<button onclick="sendR2('close')">Close</button>
+<button onclick="sendR2('lock')">Lock</button>
+
+<button onclick="sendR2('leave')">Leave</button>
+<button onclick="sendR2('restart')">Restart</button>
+
+<button class="red" onclick="sendR2('shutdown')">
+Shutdown
+</button>
+
+</div>
+
+<div class="switch">
+<label>Permalock</label>
+<input type="checkbox"
+onchange="sendR2(this.checked?'permalock_start':'permalock_stop')">
+</div>
+
+<div class="switch">
+<label>Live Stream</label>
+<input type="checkbox" id="streamToggle">
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Text senden</h2>
+
+<input id="text" placeholder="Text...">
+<button onclick="sendR2('text:'+text.value)">Senden</button>
+
+<h2 style="margin-top:25px;">Hotkey</h2>
+
+<input id="hotkey" placeholder="CTRL+ALT+DEL">
+<button onclick="sendR2('sc:'+hotkey.value)">
+Hotkey senden
+</button>
+
+<h2 style="margin-top:25px;">Taskkill</h2>
+
+<input id="task" placeholder="edge.exe">
+<button onclick="sendR2('taskkill:'+task.value)">
+Taskkill
+</button>
+
+</div>
+
+<div class="card">
+
+<details>
+
+<summary>🔊 Sounds</summary>
+
+<div class="buttons">
+<button onclick="playSound('error1')">Error1</button>
+<button onclick="playSound('error2')">Error2</button>
+<button onclick="playSound('shutdown')">Shutdown</button>
+<button onclick="playSound('startup')">Startup</button>
+</div>
+
+</details>
+
+<details>
+
+<summary>⬇ Updates</summary>
+
+<div class="buttons">
+<button onclick="updateFile('exe')">Update EXE</button>
+<button onclick="updateFile('sounds')">Update Sounds</button>
+<button onclick="updateFile('updater')">Get Updater</button>
+</div>
+
+</details>
+
+<div class="status" id="status">
+Bereit
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Live Screenstream</h2>
+
+<div class="stream">
+<img id="stream">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const SERVER="https://r2-server-htvs.onrender.com";
+const TARGET="pc-b";
+
+async function sendR2(command) {
+    try {
+        const response = await fetch(SERVER + "/api/messages/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                sender: "pc-a",
+                recipient: TARGET,
+                content: "r2:" + command
+            })
+        });
+
+        console.log(response.status);
+        console.log(await response.text());
+
+    } catch (err) {
+        console.error(err);
+    }
+
+status.innerHTML="✔ "+command;
+
+}
+
+function playSound(name){
+
+sendR2("play_sound:"+name);
+
+}
+
+function updateFile(name){
+
+sendR2("update_"+name);
+
+}
+
+const streamToggle = document.getElementById("streamToggle");
+
+streamToggle.addEventListener("change", () => {
+
+    if (streamToggle.checked) {
+        sendR2("screenstream_start");
+    } else {
+        sendR2("screenstream_stop");
+    }
+
+});
+
+setInterval(async () => {
+
+    if (!streamToggle.checked) return;
+
+    try {
+
+        const r = await fetch(
+            SERVER + "/api/screenstream/latest?sender=" + TARGET
+        );
+
+        if (!r.ok) return;
+
+        const j = await r.json();
+
+        if (j.image) {
+            stream.src = "data:image/jpeg;base64," + j.image;
+        }
+
+    } catch (e) {
+        console.error(e);
+    }
+
+}, 100);
+
+</script>
+
+</body>
+</html>
