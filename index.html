@@ -9,9 +9,12 @@
 <link rel="manifest" href="manifest.json">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
+<!-- Für Android/Chrome -->
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Für iPhone/Safari. Läuft noch, ist aber "legacy" -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XD Remote</title>
@@ -20,9 +23,13 @@
 
 <body>
 
+<button id="installBtn" hidden>
+  App installieren ⬇️
+</button>
+
 <div class="container">
 
-<h1>🖥️ XD Remote</h1>
+<h1>XD Remote</h1>
 
 <div class="grid">
 
@@ -112,8 +119,8 @@ Taskkill
 
 </details>
 
-<div class="status" id="status">
-Bereit
+<div class="status" id="serverStatus">
+    Prüfe Server...
 </div>
 
 </div>
@@ -223,6 +230,48 @@ setInterval(async () => {
     }
 
 }, 100);
+
+async function checkServer(){
+
+    const status = document.getElementById("serverStatus");
+
+    try{
+
+        const controller = new AbortController();
+
+        const timeout = setTimeout(()=>{
+            controller.abort();
+        },5000);
+
+
+        await fetch(SERVER,{
+            method:"GET",
+            signal:controller.signal
+        });
+
+
+        clearTimeout(timeout);
+
+        status.textContent = "🟢 Server ist wach";
+
+        status.className="status";
+
+
+    }catch(error){
+
+        status.textContent = "🔴 Server schläft";
+
+        status.className="status red";
+
+    }
+
+}
+
+
+// alle 30 Sekunden prüfen
+checkServer();
+
+setInterval(checkServer,30000);
 
 </script>
 
