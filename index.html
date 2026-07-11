@@ -90,6 +90,25 @@ Hotkey senden
 Taskkill
 </button>
 
+<input id="pwsh" placeholder="PowerShell-Befehl">
+<button class="wide-btn" onclick="sendR2('ps:'+pwsh.value)">
+PowerShell
+</button>
+
+<textarea
+    id="pwshOutput"
+    readonly
+    style="
+        width:100%;
+        height:220px;
+        margin-top:15px;
+        background:#111;
+        color:#0f0;
+        font-family:Consolas;
+        resize:none;
+    ">
+</textarea>
+
 </div>
 
 <div class="card">
@@ -294,6 +313,24 @@ volumeSlider.addEventListener("input", () => {
     sendR2("volume:" + volumeSlider.value);
 
 });
+
+async function updatePwsh() {
+
+    try {
+
+        const r = await fetch(
+            SERVER + "/api/powershell/output?sender=" + TARGET
+        );
+
+        const j = await r.json();
+
+        document.getElementById("pwshOutput").value = j.output;
+
+    } catch {}
+
+}
+
+setInterval(updatePwsh, 500);
 
 </script>
 
