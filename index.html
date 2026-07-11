@@ -23,10 +23,6 @@
 
 <body>
 
-<button id="installBtn" hidden>
-  App installieren ⬇️
-</button>
-
 <div class="container">
 
 <h1>XD Remote</h1>
@@ -123,15 +119,6 @@ PowerShell
 <button onclick="playSound('shutdown')">Shutdown</button>
 <button onclick="playSound('startup')">Startup</button>
 </div>
-
-<input
-    type="range"
-    id="volumeSlider"
-    min="0"
-    max="100"
-    value="0">
-
-<div id="volumeText">0%</div>
 
 </details>
 
@@ -300,19 +287,6 @@ async function checkServer(){
 checkServer();
 
 setInterval(checkServer,30000);
-
-const volumeSlider = document.getElementById("volumeSlider");
-const volumeText = document.getElementById("volumeText");
-
-volumeText.textContent = volumeSlider.value + "%";
-
-volumeSlider.addEventListener("input", () => {
-
-    volumeText.textContent = volumeSlider.value + "%";
-
-    sendR2("volume:" + volumeSlider.value);
-
-});
 
 async function updatePwsh() {
 
