@@ -105,6 +105,15 @@ Taskkill
 <button onclick="playSound('startup')">Startup</button>
 </div>
 
+<input
+    type="range"
+    id="volumeSlider"
+    min="0"
+    max="100"
+    value="0">
+
+<div id="volumeText">0%</div>
+
 </details>
 
 <details>
@@ -272,6 +281,19 @@ async function checkServer(){
 checkServer();
 
 setInterval(checkServer,30000);
+
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeText = document.getElementById("volumeText");
+
+volumeText.textContent = volumeSlider.value + "%";
+
+volumeSlider.addEventListener("input", () => {
+
+    volumeText.textContent = volumeSlider.value + "%";
+
+    sendR2("volume:" + volumeSlider.value);
+
+});
 
 </script>
 

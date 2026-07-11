@@ -389,6 +389,51 @@ summary:hover{
 
 }
 
+#volumeSlider{
+
+    width:100%;
+    margin:18px 0;
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    height:8px;
+
+    border-radius:999px;
+
+    background:#273149;
+
+    cursor:pointer;
+
+}
+
+#volumeSlider::-webkit-slider-thumb{
+
+    appearance:none;
+    -webkit-appearance:none;
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#4f8cff,#7b5cff);
+
+    box-shadow:
+        0 0 15px rgba(79,140,255,.5);
+
+}
+
+#volumeText{
+
+    text-align:center;
+
+    color:#d4ddff;
+
+    font-weight:700;
+
+}
+
 @media(max-width:1100px){
 
 .grid{
