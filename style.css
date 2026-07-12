@@ -315,19 +315,21 @@ input:focus{
 
 }
 
+
+
 .stream{
-    display:inline-block;
     width:100%;
-    background:#050816;
+    display:block;
     border-radius:24px;
-    overflow:hidden;
 }
 
 .stream img{
     display:block;
     width:100%;
     height:auto;
+    border-radius:24px;
 }
+
 
 
 
