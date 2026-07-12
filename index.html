@@ -306,6 +306,20 @@ async function updatePwsh() {
 
 setInterval(updatePwsh, 500);
 
+const img = document.getElementById("stream");
+
+img.addEventListener("click", (e) => {
+
+    const rect = img.getBoundingClientRect();
+
+    const relX = (e.clientX - rect.left) / rect.width;
+    const relY = (e.clientY - rect.top) / rect.height;
+
+    console.log(relX, relY);
+
+    sendR2(`mouse:${relX}:${relY}`);
+});
+
 </script>
 
 </body>
