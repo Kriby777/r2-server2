@@ -316,23 +316,19 @@ input:focus{
 }
 
 .stream{
-        display:inline-block;
-
-            overflow:hidden;
-
-                border-radius:24px;
-
-                    background:#050816;
-                    }
+    display:inline-block;
+    width:100%;
+    background:#050816;
+    border-radius:24px;
+    overflow:hidden;
+}
 
 .stream img{
-        display:block;
+    display:block;
+    width:100%;
+    height:auto;
+}
 
-            max-width:100%;
-                height:auto;
-
-                    border-radius:24px;
-                    }
 
 
 .status{
